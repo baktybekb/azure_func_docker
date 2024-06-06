@@ -1,2 +1,15 @@
+# Python
+*.pyc
+__pycache__/
+
+# Virtual environment
+venv/
+
+# macOS
+.DS_Store
+
+# PyCharm
 .idea/
-profile.publishsettings
+
+# Git
+.git/
