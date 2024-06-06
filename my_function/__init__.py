@@ -14,7 +14,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         req_body = req.get_json()
-    except ValueError:
+        logging.info(f"Request body: {req_body}")
+    except Exception as e:
+        logging.error(f"Error parsing JSON: {e}")
         return func.HttpResponse(
             "Invalid JSON",
             status_code=400
@@ -22,9 +24,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         item = Item(**req_body)
-    except ValidationError as e:
+        logging.info(f"Validated item: {item}")
+    except Exception as e:
+        logging.error(f"Validation error: {e.json()}")
         return func.HttpResponse(
-            f"Validation error: {e}",
+            f"Validation error: {e.json()}",
             status_code=400
         )
 
@@ -33,11 +37,3 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         mimetype="application/json",
         status_code=200
     )
-
-
-"""
-{
-  "name": "Baha",
-  "description": "Engineer"
-}
-"""
