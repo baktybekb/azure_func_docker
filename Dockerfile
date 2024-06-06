@@ -1,5 +1,5 @@
 # Dockerfile
-FROM mcr.microsoft.com/azure-functions/python:4-python3.9
+FROM mcr.microsoft.com/azure-functions/python:4-python3.11
 
 COPY . /home/site/wwwroot
 RUN pip install --upgrade pip
