@@ -41,3 +41,4 @@ jobs:
           registry-url: docker.io
           registry-username: ${{ secrets.DOCKER_USERNAME }}
           registry-password: ${{ secrets.DOCKER_PASSWORD }}
+
