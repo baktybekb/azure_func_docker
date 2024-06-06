@@ -4,8 +4,11 @@
       "name": "req",
       "type": "httpTrigger",
       "direction": "in",
-      "authLevel": "function",
-      "methods": ["get", "post"]
+      "authLevel": "anonymous",
+      "methods": [
+        "get",
+        "post"
+      ]
     },
     {
       "name": "$return",
