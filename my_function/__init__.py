@@ -1,6 +1,9 @@
+import sys
+import os
 import logging
-import azure.functions as func
 from pydantic import BaseModel
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'python_packages')))
 
 
 class Item(BaseModel):
@@ -9,19 +12,17 @@ class Item(BaseModel):
 
 
 def main(mytimer: func.TimerRequest) -> None:
-    utc_timestamp = mytimer.schedule_status.last
-    logging.info('Python timer trigger function ran at %s', utc_timestamp)
+    logging.info('Python timer trigger function ran at %s', mytimer.schedule_status.last)
 
-    # Static dictionary
-    data = {
-        "name": "Baha",
-        "description": "Engineer"
+    # Create a static dictionary
+    static_data = {
+        "name": "Example",
+        "description": "This is an example item"
     }
 
+    # Create an instance of the Item model
     try:
-        item = Item(**data)
-        logging.info(f"Item created: {item}")
+        item = Item(**static_data)
+        logging.info(f'Created item: {item.name}, {item.description}')
     except ValidationError as e:
-        logging.error(f"Validation error: {e.json()}")
-
-    logging.info('Timer trigger function executed successfully.')
+        logging.error(f'Validation error: {e}')
