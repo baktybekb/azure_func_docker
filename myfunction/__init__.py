@@ -9,7 +9,6 @@ class MyModel(BaseModel):
 
 
 def main(req: func.HttpRequest = None, timer: func.TimerRequest = None) -> func.HttpResponse:
-    logging.info('Bahaaaaaaaaaaaaaaaaaaa')
     if req:
         logging.info('Python HTTP trigger function processed a request.')
 

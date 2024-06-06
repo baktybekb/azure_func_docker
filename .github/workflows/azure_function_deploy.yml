@@ -43,3 +43,5 @@ jobs:
           app-name: bahaFunctionApp
           images: ${{ secrets.DOCKER_USERNAME }}/azure-functions:latest
           slot-name: production
+
+
