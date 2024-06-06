@@ -1,8 +1,7 @@
 FROM mcr.microsoft.com/azure-functions/python:4-python3.10
 
-# Установите зависимости
-COPY requirements.txt /
-RUN pip install --no-cache-dir -r /requirements.txt
-
-# Копируйте исходный код
 COPY . /home/site/wwwroot
+RUN pip install -r /home/site/wwwroot/requirements.txt
+
+ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
+    AzureFunctionsJobHost__Logging__Console__IsEnabled=true
