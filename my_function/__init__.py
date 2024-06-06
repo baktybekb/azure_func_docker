@@ -13,12 +13,12 @@ class Item(BaseModel):
     description: str = Field(..., example="Item description")
 
 
-@app.get("/items/")
+@app.get("/items")
 async def read_item(name: str):
     return {"name": name}
 
 
-@app.post("/items/")
+@app.post("/items")
 async def create_item(item: Item):
     return item
 
