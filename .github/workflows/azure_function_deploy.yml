@@ -38,10 +38,8 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure
-        uses: azure/functions-container-action@v1
+        uses: azure/webapps-deploy@v2
         with:
           app-name: bahaFunctionApp
-          image-name: ${{ secrets.DOCKER_USERNAME }}/azure-functions:latest
-          registry-url: docker.io
-          registry-username: ${{ secrets.DOCKER_USERNAME }}
-          registry-password: ${{ secrets.DOCKER_PASSWORD }}
+          images: ${{ secrets.DOCKER_USERNAME }}/azure-functions:latest
+          slot-name: production
