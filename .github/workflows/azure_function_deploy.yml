@@ -1,4 +1,4 @@
-name: Build and Deploy Azure Function
+name: Azure Function Deploy
 
 on:
   push:
@@ -6,40 +6,33 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build Docker image
+      run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/azure-function:${{ github.sha }} .
 
-      - name: Build and push Docker image
-        run: |
-          cd myfunction
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/azure-functions:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/azure-functions:latest
+    - name: Push Docker image to Docker Hub
+      run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/azure-function:${{ github.sha }}
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: bahaFunctionApp
-          images: ${{ secrets.DOCKER_USERNAME }}/azure-functions:latest
-          slot-name: production
+    - name: Deploy to Azure
+      run: |
+        az functionapp config container set \
+          --name ${{ secrets.AZURE_FUNCTION_APP_NAME }} \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --docker-custom-image-name ${{ secrets.DOCKER_HUB_USERNAME }}/azure-function:${{ github.sha }} \
+          --docker-registry-server-url https://index.docker.io/v1/ \
+          --docker-registry-server-user ${{ secrets.DOCKER_HUB_USERNAME }} \
+          --docker-registry-server-password ${{ secrets.DOCKER_HUB_PASSWORD }}
