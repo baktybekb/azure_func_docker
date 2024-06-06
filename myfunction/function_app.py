@@ -1,7 +1,6 @@
 import logging
 import azure.functions as func
 from pydantic import BaseModel
-from fastapi import Response
 
 
 class MyModel(BaseModel):
@@ -9,26 +8,25 @@ class MyModel(BaseModel):
     age: int
 
 
-def main(req: func.HttpRequest, timer: func.TimerRequest) -> func.HttpResponse:
-    logging.info('BAHAAAAAAAAAAAAAAAAAA')
-    print('BAHAAAAAAAAAAAAAAAAAAAAAAAAAA-------------')
+def main(req: func.HttpRequest = None, timer: func.TimerRequest = None) -> func.HttpResponse:
+    logging.info('Bahaaaaaaaaaaaaaaaaaaa')
     if req:
         logging.info('Python HTTP trigger function processed a request.')
 
-        name = req.params.get('name')
-        if not name:
-            try:
-                req_body = req.get_json()
-            except ValueError:
-                pass
-            else:
-                name = req_body.get('name')
+        try:
+            req_body = req.get_json()
+            name = req_body.get('name')
+        except ValueError:
+            return func.HttpResponse(
+                "Please pass a name in the request body",
+                status_code=400
+            )
 
         if name:
             return func.HttpResponse(f"Hello, {name}!")
         else:
             return func.HttpResponse(
-                "Please pass a name on the query string or in the request body",
+                "Please pass a name in the request body",
                 status_code=400
             )
 
