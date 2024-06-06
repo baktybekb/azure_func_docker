@@ -32,3 +32,4 @@ jobs:
           app-name: <your-function-app-name>
           package: function.zip
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+
