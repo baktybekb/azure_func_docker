@@ -46,11 +46,6 @@ jobs:
           pip install -r requirements.txt --target=".python_packages/lib/site-packages"
           popd
 
-      - name: Print installed Python packages
-        run: |
-          source venv/bin/activate
-          pip list
-
       - name: Login to Azure
         uses: azure/login@v1
         with:
