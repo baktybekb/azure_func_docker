@@ -17,26 +17,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python version
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-
-      - name: Install dependencies
-        run: |
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
       - name: Zip artifact for deployment
-        run: |
-          source venv/bin/activate
-          zip -r release.zip . -x "venv/bin/activate_this.py"
+        run: zip -r release.zip . -x "venv/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -56,7 +38,17 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Print Python packages
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        run: |
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Print installed Python packages
         run: |
           source venv/bin/activate
           pip list
@@ -71,5 +63,5 @@ jobs:
         with:
           app-name: 'bahaFunctionApp'
           package: '.'
-          scm-do-build-during-deployment: true
-          enable-oryx-build: true
+          scm-do-build-during-deployment: false
+          enable-oryx-build: false
