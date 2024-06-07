@@ -6,9 +6,8 @@ on:
       - main
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # Path to the web app project
   PYTHON_VERSION: '3.10' # Python version to use
-  IMAGE_NAME: 'bahaFunctionApp' # Имя Docker Image
+  IMAGE_NAME: 'bahafunctionapp' # Имя Docker Image в нижнем регистре
 
 jobs:
   build:
@@ -50,8 +49,8 @@ jobs:
         with:
           inlineScript: |
             az functionapp config container set \
-              --name ${{ env.IMAGE_NAME }} \
-              --resource-group <your-resource-group> \
+              --name bahaFunctionApp \
+              --resource-group bahaResourceGroup \
               --docker-custom-image-name ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest \
               --docker-registry-server-url https://index.docker.io/v1/ \
               --docker-registry-server-user ${{ secrets.DOCKER_USERNAME }} \
