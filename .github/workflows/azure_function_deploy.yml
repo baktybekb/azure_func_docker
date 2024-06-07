@@ -59,7 +59,7 @@ jobs:
       - name: 'Deploy to Azure Functions'
         uses: azure/functions-action@v1
         with:
-          app-name: 'bahaSecondFunctionApp'
+          app-name: 'bahaFunctionApp'
           package: '.'
           scm-do-build-during-deployment: true
           enable-oryx-build: true
