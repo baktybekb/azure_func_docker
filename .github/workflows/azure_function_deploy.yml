@@ -56,6 +56,11 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      - name: Print Python packages
+        run: |
+          source venv/bin/activate
+          pip list
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
