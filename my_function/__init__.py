@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 import azure.functions as func
 from pydantic import BaseModel
 from fastapi import FastAPI
@@ -17,3 +18,5 @@ def main(mytimer: func.TimerRequest) -> None:
     item = Item(name="Example", description="This is a test item")
     logging.info(f"Python timer trigger function ran at {utc_timestamp}")
     logging.info(f"Item: {item.json()}")
+
+    logging.info(os.getenv('BAHA'))
