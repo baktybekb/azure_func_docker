@@ -32,7 +32,10 @@ jobs:
         run: python -m unittest discover
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip . -x 'venv/*' -x 'tests/*'
+        run: |
+          cd my_function
+          zip -r ../release.zip . -x __pycache__/*
+          cd ..
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
