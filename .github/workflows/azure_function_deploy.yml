@@ -26,11 +26,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Copy .env file
+        run: cp .env.example .env
+
+      - name: Debug environment variables
+        run: printenv
+
       - name: Run tests
         env:
           PYTHONPATH: .
         run: |
-          cp .env.example .env
           python -m unittest discover
 
       - name: Zip artifact for deployment
