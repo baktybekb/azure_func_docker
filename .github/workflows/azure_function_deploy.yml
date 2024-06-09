@@ -30,6 +30,7 @@ jobs:
         run: | 
           cp .env.example .env
           ls -la
+          ls my_function
           python -m unittest discover
 
       - name: Zip artifact for deployment
