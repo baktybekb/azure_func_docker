@@ -28,7 +28,7 @@ jobs:
 
       - name: Run tests
         env:
-          PYTHOPATH: .
+          PYTHONPATH: .
         run: |
           cp .env.example .env
           python -m unittest discover
