@@ -33,9 +33,8 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          cd my_function
-          zip -r ../release.zip . -x __pycache__/*
-          cd ..
+          zip -r release.zip my_function -x 'my_function/__pycache__/*'
+          zip -g release.zip requirements.txt
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
