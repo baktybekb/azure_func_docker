@@ -29,6 +29,7 @@ jobs:
       - name: Run tests
         run: | 
           cp .env.example .env
+          ls -la
           python -m unittest discover
 
       - name: Zip artifact for deployment
