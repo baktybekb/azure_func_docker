@@ -12,6 +12,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      API_KEY: ${{ secrets.API_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,7 +29,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: python -m unittest discover -s tests
+        run: python -m unittest discover
 
       - name: Zip artifact for deployment
         run: zip -r release.zip . -x 'venv/*' -x 'tests/*'
