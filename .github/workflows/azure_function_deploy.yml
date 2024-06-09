@@ -22,7 +22,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Copy .env file
-        run: cp .env.example .env
+        run: cp ./.env.example ./.env
 
       - name: Install dependencies
         run: |
