@@ -27,10 +27,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: | 
+        env:
+          PYTHOPATH: .
+        run: |
           cp .env.example .env
-          ls -la
-          ls my_function
           python -m unittest discover
 
       - name: Zip artifact for deployment
