@@ -6,7 +6,7 @@ authors = ["bbaiserkeev"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 dependency-injector = "^4.41.0"
 ldap3 = "^2.9.1"
 pydantic = "^2.7.3"
