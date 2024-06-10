@@ -25,7 +25,7 @@ jobs:
           poetry run python -m unittest discover
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip .
+        run: zip -r release.zip . -x '*__pycache__*'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
