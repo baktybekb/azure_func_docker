@@ -82,8 +82,8 @@ jobs:
           source $GITHUB_ENV
           mkdir -p .python_packages/lib/site-packages
           poetry config virtualenvs.create false
-          poetry install --no-dev --no-root
-          cp -r $(poetry env info -p)/lib/python${{ env.PYTHON_VERSION }}/site-packages/* .python_packages/lib/site-packages/
+          poetry install --no-dev
+          cp -r $(poetry env info --path)/lib/python*/site-packages/* .python_packages/lib/site-packages/
 
       - name: Login to Azure
         uses: azure/login@v1
