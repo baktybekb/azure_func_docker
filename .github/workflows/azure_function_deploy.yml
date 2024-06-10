@@ -24,12 +24,12 @@ jobs:
         run: |
           poetry run pytest
 
-      - name: Resolve Project Dependencies Using Poetry
-        shell: bash
+      - name: Prepare deployment package
         run: |
-          poetry export -f requirements.txt --output requirements.txt
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+          mkdir -p .python_packages/lib/site-packages
+          cp -r $(poetry env info --path)/lib/python*/site-packages/* .python_packages/lib/site-packages/
+          cp -r azure_function ./
+          cp pyproject.toml poetry.lock ./
 
       - name: Login to Azure
         uses: azure/login@v1
