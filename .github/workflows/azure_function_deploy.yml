@@ -31,14 +31,17 @@ jobs:
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          export PATH="$HOME/.local/bin:$PATH"
+          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
 
       - name: Install dependencies
         run: |
+          source $GITHUB_ENV
           poetry install
 
       - name: Run tests
-        run: python -m unittest discover
+        run: |
+          source $GITHUB_ENV
+          poetry run python -m unittest discover
 
       - name: Zip artifact for deployment
         run: |
@@ -66,11 +69,12 @@ jobs:
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          export PATH="$HOME/.local/bin:$PATH"
+          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
 
       - name: Resolve Project Dependencies Using Poetry
         shell: bash
         run: |
+          source $GITHUB_ENV
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           poetry install --no-dev
           popd
