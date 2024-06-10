@@ -68,6 +68,11 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
