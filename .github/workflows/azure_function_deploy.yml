@@ -29,7 +29,6 @@ jobs:
           mkdir -p release/.python_packages/lib/site-packages
           cp -r $(poetry env info --path)/lib/python*/site-packages/* release/.python_packages/lib/site-packages/
           cp -r azure_function release/
-          cp pyproject.toml poetry.lock release/
 
       - name: Login to Azure
         uses: azure/login@v1
