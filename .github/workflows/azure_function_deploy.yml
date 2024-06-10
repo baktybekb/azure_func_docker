@@ -47,8 +47,7 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip azure_function
-          zip -g release.zip pyproject.toml poetry.lock
+          zip -r release.zip azure_function pyproject.toml poetry.lock
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -81,19 +80,16 @@ jobs:
           poetry env use ${{ env.PYTHON_VERSION }}
 
       - name: Resolve Project Dependencies Using Poetry
-        shell: bash
         run: |
           source $GITHUB_ENV
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           poetry install --no-dev
-          popd
 
       - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 'Deploy to Azure Functions'
+      - name: Deploy to Azure Functions
         uses: azure/functions-action@v1
         with:
           app-name: 'bahaFunctionApp'
