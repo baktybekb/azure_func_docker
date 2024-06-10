@@ -44,9 +44,14 @@ jobs:
           source $GITHUB_ENV
           poetry run python -m unittest discover
 
+      - name: Export dependencies
+        run: |
+          source $GITHUB_ENV
+          poetry export -f requirements.txt --output requirements.txt --without-hashes
+
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip azure_function pyproject.toml poetry.lock
+          zip -r release.zip azure_function pyproject.toml poetry.lock requirements.txt
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -71,18 +76,11 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install Poetry
+      - name: Install dependencies
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
-          source $GITHUB_ENV
-
-      - name: Resolve Project Dependencies Using Poetry
-        run: |
-          source $GITHUB_ENV
-          poetry config virtualenvs.create false
           mkdir -p .python_packages/lib/site-packages
-          poetry install --no-dev --target=.python_packages/lib/site-packages
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt --target=.python_packages/lib/site-packages
 
       - name: Login to Azure
         uses: azure/login@v1
