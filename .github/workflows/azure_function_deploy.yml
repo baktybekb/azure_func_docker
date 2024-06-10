@@ -26,10 +26,10 @@ jobs:
 
       - name: Prepare deployment package
         run: |
-          mkdir -p .python_packages/lib/site-packages
-          cp -r $(poetry env info --path)/lib/python*/site-packages/* .python_packages/lib/site-packages/
-          cp -r azure_function ./
-          cp pyproject.toml poetry.lock ./
+          mkdir -p release/.python_packages/lib/site-packages
+          cp -r $(poetry env info --path)/lib/python*/site-packages/* release/.python_packages/lib/site-packages/
+          cp -r azure_function release/
+          cp pyproject.toml poetry.lock release/
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -40,6 +40,6 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: bahaFunctionApp
-          package: .
+          package: release
           scm-do-build-during-deployment: false
           enable-oryx-build: false
