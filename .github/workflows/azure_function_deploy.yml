@@ -84,6 +84,10 @@ jobs:
           source $GITHUB_ENV
           poetry install --no-dev
 
+      - name: Package for Azure Functions
+        run: |
+          zip -r deployment_package.zip . -x ".*" -x "__pycache__/*"
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -93,6 +97,6 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: 'bahaFunctionApp'
-          package: '.'
+          package: 'deployment_package.zip'
           scm-do-build-during-deployment: false
           enable-oryx-build: false
