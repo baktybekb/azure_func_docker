@@ -28,30 +28,18 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
-          source $GITHUB_ENV
-
       - name: Install dependencies
         run: |
-          source $GITHUB_ENV
-          poetry install
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run tests
-        run: |
-          source $GITHUB_ENV
-          poetry run python -m unittest discover
-
-      - name: Export dependencies
-        run: |
-          source $GITHUB_ENV
-          poetry export -f requirements.txt --output requirements.txt --without-hashes
+        run: python -m unittest discover
 
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip azure_function pyproject.toml poetry.lock requirements.txt
+          zip -r release.zip azure_function -x 'azure_function/__pycache__/*'
+          zip -g release.zip requirements.txt
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -71,12 +59,8 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install dependencies
+      - name: Resolve Project Dependencies Using Pip
+        shell: bash
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           python -m pip install --upgrade pip
@@ -88,7 +72,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Functions
+      - name: 'Deploy to Azure Functions'
         uses: azure/functions-action@v1
         with:
           app-name: 'bahaFunctionApp'
