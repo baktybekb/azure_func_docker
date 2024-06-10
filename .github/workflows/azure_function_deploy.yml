@@ -31,18 +31,23 @@ jobs:
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
+          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
+          source $GITHUB_ENV
+          poetry env use ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
-        run: poetry install
+        run: |
+          source $GITHUB_ENV
+          poetry install
 
       - name: Run tests
-        run: poetry run python -m unittest discover
+        run: |
+          source $GITHUB_ENV
+          poetry run python -m unittest discover
 
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip azure_function
-          zip -g release.zip pyproject.toml poetry.lock
+          zip -r release.zip azure_function pyproject.toml poetry.lock
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -62,12 +67,25 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Resolve Project Dependencies Using Poetry
-        shell: bash
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
         run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
+          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
+          source $GITHUB_ENV
+          source $BASH_ENV
+          poetry env use ${{ env.PYTHON_VERSION }}
+
+      - name: Resolve Project Dependencies Using Poetry
+        run: |
+          source $GITHUB_ENV
+          source $BASH_ENV
           poetry install --no-dev
-          popd
 
       - name: Login to Azure
         uses: azure/login@v1
