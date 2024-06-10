@@ -18,7 +18,7 @@ class LDAPConnection:
         conn (Optional[Connection]): LDAP connection object.
     """
 
-    def init(self, ldap_url: str, manager_dn: str, manager_password: str):
+    def __init__(self, ldap_url: str, manager_dn: str, manager_password: str):
         """
         Initializes the LDAPConnection context manager.
 
@@ -32,7 +32,7 @@ class LDAPConnection:
         self.manager_password = manager_password
         self.conn: Optional[Connection] = None
 
-    def enter(self) -> Connection:
+    def __enter__(self) -> Connection:
         """
         Establishes the LDAP connection on entering the context.
 
@@ -47,7 +47,7 @@ class LDAPConnection:
         logger.info("Connected to the LDAP server.")
         return self.conn
 
-    def exit(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback):
         """
         Closes the LDAP connection on exiting the context.
         """
@@ -64,7 +64,7 @@ class LDAPService:
         connection (Connection): LDAP connection object.
     """
 
-    def init(self, connection: Connection):
+    def __init__(self, connection: Connection):
         """
         Initializes the LDAPService.
 
@@ -147,7 +147,7 @@ class LDAPApplication:
         ldap_service (LDAPService): Instance of LDAPService.
     """
 
-    def init(self, ldap_service: LDAPService):
+    def __init__(self, ldap_service: LDAPService):
         """
         Initializes the LDAPApplication.
 
