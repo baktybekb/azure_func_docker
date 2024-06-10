@@ -4,7 +4,7 @@ import azure.functions as func
 
 
 def main(mytimer: func.TimerRequest) -> None:
-    logging.info('Hello world!')
+    logging.info('Bahaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 
     container = Container()
     with container.ldap_connection() as conn:
