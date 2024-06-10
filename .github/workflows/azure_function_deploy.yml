@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+env:
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # Path to the web app project
+  PYTHON_VERSION: '3.11' # Python version to use
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,7 +50,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Functions
+      - name: 'Deploy to Azure Functions'
         uses: azure/functions-action@v1
         with:
           app-name: 'bahaFunctionApp'
