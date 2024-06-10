@@ -17,25 +17,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-
-      - name: Configure Poetry
-        run: |
-          poetry config virtualenvs.in-project true
-
       - name: Install dependencies
         run: |
-          poetry install --no-root
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run tests
         run: |
-          poetry run python -m unittest discover
-
-      - name: Export dependencies
-        run: |
-          poetry export -f requirements.txt --output requirements.txt --without-hashes
+          python -m unittest discover
 
       - name: Zip artifact for deployment
         run: zip -r release.zip .
@@ -49,6 +38,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    env:
+      AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # Path to the web app project
     steps:
       - name: Set up Python 3.11
         uses: actions/setup-python@v4
@@ -63,8 +54,13 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Check directory structure
-        run: ls -R
+      - name: Resolve Project Dependencies Using Pip
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+          popd
 
       - name: Login to Azure
         uses: azure/login@v1
