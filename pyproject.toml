@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "tech-project"
+version = "0.1.0"
+description = ""
+authors = ["bbaiserkeev <bbaiserkeev@s-pro.io>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+dependency-injector = "^4.41.0"
+ldap3 = "^2.9.1"
+pydantic = "^2.7.3"
+pydantic-settings = "^2.3.1"
+azure-functions = "^1.19.0"
+pytest = "^8.2.2"
+pytest-mock = "^3.14.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
