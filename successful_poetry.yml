@@ -25,7 +25,7 @@ jobs:
           poetry run python -m unittest discover
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip . -x '*__pycache__*'
+        run: zip -r release.zip azure_function poetry.lock pyproject.toml -x '*__pycache__*' -x '.git/*'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
