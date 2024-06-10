@@ -16,23 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-
-      - name: Configure Poetry
-        run: |
-          poetry config virtualenvs.in-project true
-
-      - name: Install dependencies
-        run: |
-          poetry install
-
       - name: Zip artifact for deployment
         run: zip -r release.zip .
 
@@ -46,15 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
@@ -63,11 +37,10 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Resolve Project Dependencies Using Poetry
+      - name: Resolve Project Dependencies Using Pip
         shell: bash
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          poetry export -f requirements.txt --output requirements.txt
           python -m pip install --upgrade pip
           pip install -r requirements.txt --target=".python_packages/lib/site-packages"
           popd
