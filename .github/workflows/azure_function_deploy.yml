@@ -31,23 +31,18 @@ jobs:
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
-          source $GITHUB_ENV
-          poetry env use ${{ env.PYTHON_VERSION }}
+          echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
 
       - name: Install dependencies
-        run: |
-          source $GITHUB_ENV
-          poetry install
+        run: poetry install
 
       - name: Run tests
-        run: |
-          source $GITHUB_ENV
-          poetry run python -m unittest discover
+        run: poetry run python -m unittest discover
 
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip azure_function pyproject.toml poetry.lock
+          zip -r release.zip azure_function
+          zip -g release.zip pyproject.toml poetry.lock
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -67,36 +62,22 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
-          source $GITHUB_ENV
-          poetry env use ${{ env.PYTHON_VERSION }}
-
       - name: Resolve Project Dependencies Using Poetry
+        shell: bash
         run: |
-          source $GITHUB_ENV
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           poetry install --no-dev
-
-      - name: Package for Azure Functions
-        run: |
-          zip -r deployment_package.zip . -x ".*" -x "__pycache__/*"
+          popd
 
       - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Functions
+      - name: 'Deploy to Azure Functions'
         uses: azure/functions-action@v1
         with:
           app-name: 'bahaFunctionApp'
-          package: 'deployment_package.zip'
+          package: '.'
           scm-do-build-during-deployment: false
           enable-oryx-build: false
