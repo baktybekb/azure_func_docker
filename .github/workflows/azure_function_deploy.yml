@@ -46,7 +46,7 @@ jobs:
           name: python-app
 
       - name: Unzip artifact for deployment
-        run: unzip -o release.zip
+        run: unzip release.zip
 
       - name: Install Poetry
         run: |
