@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -23,34 +23,6 @@ jobs:
       - name: Run tests
         run: |
           poetry run pytest
-
-      - name: Zip artifact for deployment
-        run: zip -r release.zip azure_function poetry.lock pyproject.toml -x '*__pycache__*' -x '.git/*'
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
-        with:
-          name: python-app
-          path: release.zip
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: python-app
-
-      - name: Unzip artifact for deployment
-        run: unzip -o release.zip
-
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
 
       - name: Resolve Project Dependencies Using Poetry
         shell: bash
