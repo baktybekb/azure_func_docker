@@ -32,6 +32,8 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
+          echo 'POETRY_HOME="$HOME/.local"' >> $GITHUB_ENV
+          echo 'export PATH="$POETRY_HOME/bin:$PATH"' >> $GITHUB_ENV
           source $GITHUB_ENV
           poetry env use ${{ env.PYTHON_VERSION }}
 
@@ -76,15 +78,14 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
-          echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
+          echo 'POETRY_HOME="$HOME/.local"' >> $GITHUB_ENV
+          echo 'export PATH="$POETRY_HOME/bin:$PATH"' >> $GITHUB_ENV
           source $GITHUB_ENV
-          source $BASH_ENV
           poetry env use ${{ env.PYTHON_VERSION }}
 
       - name: Resolve Project Dependencies Using Poetry
         run: |
           source $GITHUB_ENV
-          source $BASH_ENV
           poetry install --no-dev
 
       - name: Login to Azure
