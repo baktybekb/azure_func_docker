@@ -51,6 +51,10 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
