@@ -24,10 +24,10 @@ jobs:
         run: |
           poetry run pytest
 
-#      - name: Prepare deployment package
-#        run: |
-#          mkdir -p .python_packages/lib/site-packages
-#          cp -r $(poetry env info --path)/lib/python*/site-packages/* azure_function/.python_packages/lib/site-packages/
+      - name: Prepare deployment package
+        run: |
+          mkdir -p .python_packages/lib/site-packages
+          cp -r $(poetry env info --path)/lib/python*/site-packages/* .python_packages/lib/site-packages/
 
       - name: Login to Azure
         uses: azure/login@v1
