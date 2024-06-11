@@ -24,10 +24,10 @@ jobs:
         run: |
           poetry run pytest
 
-      - name: Prepare deployment package
-        run: |
-          mkdir -p azure_function/.python_packages/lib/site-packages
-          cp -r $(poetry env info --path)/lib/python*/site-packages/* azure_function/.python_packages/lib/site-packages/
+#      - name: Prepare deployment package
+#        run: |
+#          mkdir -p .python_packages/lib/site-packages
+#          cp -r $(poetry env info --path)/lib/python*/site-packages/* azure_function/.python_packages/lib/site-packages/
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -38,6 +38,6 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: bahaFunctionApp
-          package: ./azure_function
+          package: .
           scm-do-build-during-deployment: false
           enable-oryx-build: false
