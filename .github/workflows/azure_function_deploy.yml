@@ -38,6 +38,6 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: bahaFunctionApp
-          package: .
+          package: ./azure_function
           scm-do-build-during-deployment: false
           enable-oryx-build: false
